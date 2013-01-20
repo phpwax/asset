@@ -1,0 +1,31 @@
+{
+    "name": "phpwax/asset",
+    "type": "library",
+    "description": "Wax Asset Bridge",
+    "keywords": [],
+    "homepage": "http://php-wax.com",
+    "license": "MIT",
+    "authors": [
+        {"name": "Ross Riley","email": "ross@oneblackbear.com"},
+        {"name": "Charles Marshall","email": "charles@oneblackbear.com"},
+        {"name": "Sheldon Els","email": "sheldon@oneblackbear.com"}
+    ],
+    "require": {
+      "php": ">=5.3.0",
+      "kriswallsmith/assetic": "1.1.*@dev"
+    },
+
+    
+    "autoload": {
+        "psr-0": { "Wax\\Asset": "" }
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    },
+    "target-dir": "Wax/Asset",
+    "files": ["functions.php"]
+    
+}
