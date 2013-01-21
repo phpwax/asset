@@ -28,5 +28,9 @@ class AssetServer {
     }
   }
   
+  public function build_bundle($bundle, $type, $source_path, $target_link =false) {
+    
+  }
+  
   
 }
