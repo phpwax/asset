@@ -32,6 +32,8 @@ class AssetServer {
   
   
   public function serve($asset_paths = array()) {
+    $type = $asset_paths[0];
+    $bundle = $asset_paths[1];
     $collection = $this->asset_manager->get($bundle."_".$type);
     foreach($collection as $asset) {
       print_r($asset);
