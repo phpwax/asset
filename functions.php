@@ -12,14 +12,18 @@ function css_bundle($name, $options=array(), $plugin="") {
   if(ENV=="development") {     
     if($plugin) {
       if(is_link(PUBLIC_DIR."stylesheets/".$name)) {
-        $base = PUBLIC_DIR."stylesheets/".$name;
-      } else $base = PLUGIN_DIR.$plugin."/resources/public/stylesheets/";
-       
-    } else $base = PUBLIC_DIR."stylesheets/".$name;
-    $d = $base;
+        $base = PUBLIC_DIR;
+        $d = PUBLIC_DIR."stylesheets/".$name;
+      } else {
+        $base = PLUGIN_DIR.$plugin."/resources/public/";
+        $d = $base."stylesheets/";
+      } 
+    } else {
+      $base = PUBLIC_DIR;
+      $d = $base."stylesheets/".$name; 
+    }
     if(!is_readable($d)) return false;
          
-    
     
     foreach($tag_build->iterate_dir($d, "js") as $file){
       $name = $file->getPathName();
@@ -36,11 +40,17 @@ function js_bundle($name, $options = array(), $plugin="") {
   if(ENV=="development" || defined("NO_JS_BUNDLE")) {
     if($plugin) {
       if(is_link(PUBLIC_DIR."javascripts/".$name)) {
-        $base = PUBLIC_DIR."javascripts/".$name;
-      } else $base = PLUGIN_DIR.$plugin."/resources/public/javascripts/";
-       
-    } else $base = PUBLIC_DIR."javascripts/".$name;
-    $d = $base; 
+        $base = PUBLIC_DIR;
+        $d = PUBLIC_DIR."javascripts/".$name;
+      } else {
+        $base = PLUGIN_DIR.$plugin."/resources/public/";
+        $d = $base."javascripts/";
+      } 
+    } else {
+      $base = PUBLIC_DIR;
+      $d = $base."javascripts/".$name; 
+    }
+    
     if(!is_readable($d)) return false;
     
     foreach($tag_build->iterate_dir($d, "js") as $file){
