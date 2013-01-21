@@ -16,7 +16,7 @@ class AssetServer {
     if(!$target_link) $target_link = PUBLIC_DIR.$type."/".$bundle;
     if(!is_link($target_link)) {
       try {
-        symlink($source_path, $target_link);
+        exec('ln -s $source_path $target_link');
       } catch (Exception $e) {
         throw new Exception("Unable to create $type bundle at $target_link");
       }
