@@ -15,7 +15,9 @@ function css_bundle($name, $options=array(), $plugin="") {
       } else $base = PLUGIN_DIR.$plugin."/resources/public/stylesheets/";
        
     } else $base = PUBLIC_DIR."stylesheets/".$name;
-    $d = $base;       
+    $d = $base;
+    if(!is_readable($d)) return false;
+         
     $dir = new \RecursiveIteratorIterator(new \RecursiveRegexIterator(new \RecursiveDirectoryIterator($d, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS), '#(?<!/)\.css$|^[^\.]*$#i'), true);
     foreach($dir as $file){
       $name = $file->getPathName();
@@ -34,6 +36,8 @@ function js_bundle($name, $options = array(), $plugin="") {
        
     } else $base = PUBLIC_DIR."javascripts/".$name;
     $d = $base; 
+    if(!is_readable($d)) return false;
+    
     $dir = new \RecursiveIteratorIterator(new \RecursiveRegexIterator(new \RecursiveDirectoryIterator($d, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS), '#(?<!/)\.js$|^[^\.]*$#i'), true);
     foreach($dir as $file){
       $name = $file->getPathName();
