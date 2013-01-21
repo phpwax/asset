@@ -26,8 +26,12 @@ class AssetServer {
     $this->asset_manager->set($bundle, $finder->get_collection());
   }
   
-  public function handles($bundle) {
+  public function handles($bundle, $type) {
     return $this->asset_manager->has($bundle);
+  }
+  
+  public function serve($asset_paths = array()) {
+    
   }
   
   
