@@ -34,7 +34,6 @@ function js_bundle($name, $options = array(), $plugin="") {
         $base = PUBLIC_DIR."javascripts/".$name;
       } 
     } else $base = PUBLIC_DIR;    
-    else $base = PUBLIC_DIR;
     $d = $base."javascripts/".$name;
     $dir = new \RecursiveIteratorIterator(new \RecursiveRegexIterator(new \RecursiveDirectoryIterator($d, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS), '#(?<!/)\.js$|^[^\.]*$#i'), true);
     foreach($dir as $file){
