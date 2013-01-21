@@ -12,7 +12,7 @@ function css_bundle($name, $options=array(), $plugin="") {
     if($plugin) {
       $base = PLUGIN_DIR.$plugin."/resources/public/";
       if(!is_dir($base) && is_link(PUBLIC_DIR."stylesheets/".$name)) {
-        $base = PUBLIC_DIR."stylesheets/".$name;
+        $base = PUBLIC_DIR;
       } 
     } else $base = PUBLIC_DIR;
     $d = $base."stylesheets/".$name;       
@@ -31,7 +31,7 @@ function js_bundle($name, $options = array(), $plugin="") {
     if($plugin) {
       $base = PLUGIN_DIR.$plugin."/resources/public/";
       if(!is_dir($base) && is_link(PUBLIC_DIR."javascripts/".$name)) {
-        $base = PUBLIC_DIR."javascripts/".$name;
+        $base = PUBLIC_DIR;
       } 
     } else $base = PUBLIC_DIR;    
     $d = $base."javascripts/".$name;
