@@ -38,9 +38,9 @@ class RecursiveAssetFinder {
   
   private function initialize() {
     $this->add_directory($this->base);    
-    $directories = new RecursiveIteratorIterator(
-        new ParentIterator(new RecursiveDirectoryIterator($this->base)), 
-          RecursiveIteratorIterator::SELF_FIRST);
+    $directories = new \RecursiveIteratorIterator(
+        new \ParentIterator(new \RecursiveDirectoryIterator($this->base)), 
+         \ RecursiveIteratorIterator::SELF_FIRST);
     foreach($directories as $dir) {
       $this->add_directory($dir);
     }
