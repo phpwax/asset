@@ -18,7 +18,7 @@ class AssetServer {
       if(is_writable(basename($target_link))) {
         symlink($source_path, $target_link);
       } else {
-        throw new \Exception("Unable to create $type bundle at $target_link - Allow write access to parent folder");
+        throw new \Exception("Unable to create $type bundle at $target_link : Allow write access to parent folder");
       }
     }
   }
