@@ -1,5 +1,6 @@
 <?php
 namespace Wax\Asset;
+use Assetic\AssetManager;
 use Assetic\Asset\AssetCollection;
 use Assetic\Asset\FileAsset;
 
@@ -10,6 +11,19 @@ use Assetic\Asset\FileAsset;
 * @author Ross Riley
 */
 class AssetServer {
+  
+  public $asset_manager = false;
+  
+  
+  public function __construct() {
+    $this->asset_manager = new AssetManager;
+  }
+  
+  public function register($bundle, $asset_directory, $type=false) {
+    $glob = rtrim($asset_directory,"/")."/*";
+    $finder = new RecursiveAssetFinder($glob);
+    $this->asset_manager->set($bundle, $finder->get_collection());
+  }
   
   
   static public function symlink_bundle($bundle, $type, $source_path, $target_link = false) {
@@ -28,9 +42,7 @@ class AssetServer {
     }
   }
   
-  public function build_bundle($bundle, $type, $source_path, $target_link =false) {
-    
-  }
+  
   
   
 }
