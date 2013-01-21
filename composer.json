@@ -26,6 +26,8 @@
         }
     },
     "target-dir": "Wax/Asset",
-    "files": ["functions.php"]
+    "autoload": {
+      "files": ["functions.php"]
+    }
     
 }
