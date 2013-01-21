@@ -11,9 +11,9 @@ function css_bundle($name, $options=array(), $plugin="") {
   $tag_build = new AssetTagHelper;
   if(ENV=="development") {     
     if($plugin) {
-      if(is_link(PUBLIC_DIR."stylesheets/".$name)) {
+      if(is_link(PUBLIC_DIR."stylesheets/build/vendor/".$name)) {
         $base = PUBLIC_DIR;
-        $d = PUBLIC_DIR."stylesheets/".$name;
+        $d = PUBLIC_DIR."stylesheets/build/vendor/".$name;
       } else {
         $base = PLUGIN_DIR.$plugin."/resources/public/";
         $d = $base."stylesheets/";
@@ -39,9 +39,9 @@ function js_bundle($name, $options = array(), $plugin="") {
   $tag_build = new AssetTagHelper;
   if(ENV=="development" || defined("NO_JS_BUNDLE")) {
     if($plugin) {
-      if(is_link(PUBLIC_DIR."javascripts/".$name)) {
+      if(is_link(PUBLIC_DIR."javascripts/build/vendor/".$name)) {
         $base = PUBLIC_DIR;
-        $d = PUBLIC_DIR."javascripts/".$name;
+        $d = PUBLIC_DIR."javascripts/build/vendor/".$name;
       } else {
         $base = PLUGIN_DIR.$plugin."/resources/public/";
         $d = $base."javascripts/";
