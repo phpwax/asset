@@ -23,15 +23,20 @@ class AssetServer {
   public function register($bundle, $asset_directory, $type=false) {
     $glob = rtrim($asset_directory,"/")."/*";
     $finder = new RecursiveAssetFinder($glob);
-    $this->asset_manager->set($bundle, $finder->get_collection());
+    $this->asset_manager->set($bundle."_".$type, $finder->get_collection());
   }
   
   public function handles($bundle, $type) {
-    return $this->asset_manager->has($bundle);
+    return $this->asset_manager->has($bundle."_".$type);
   }
   
+  
   public function serve($asset_paths = array()) {
-    
+    $collection = $this->asset_manager->get($bundle."_".$type);
+    foreach($collection as $asset) {
+      print_r($asset);
+    }
+    exit;
   }
   
   
