@@ -18,12 +18,13 @@ function css_bundle($name, $options=array(), $plugin="") {
     $d = $base;
     if(!is_readable($d)) return false;
          
+    $tag_build = new AssetTagHelper;
     $dir = new \RecursiveIteratorIterator(new \RecursiveRegexIterator(new \RecursiveDirectoryIterator($d, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS), '#(?<!/)\.css$|^[^\.]*$#i'), true);
     foreach($dir as $file){
       $name = $file->getPathName();
-      if(is_file($name)) $ret .= AssetTagHelper::stylesheet_link_tag("/".str_replace($base, "", $name), $options);
+      if(is_file($name)) $ret .= $tag_build->stylesheet_link_tag("/".str_replace($base, "", $name), $options);
     }
-  } else $ret = AssetTagHelper::stylesheet_link_tag("build/{$name}_combined", $options);
+  } else $ret = $tag_build->stylesheet_link_tag("build/{$name}_combined", $options);
   return $ret;
 }
 
@@ -38,12 +39,14 @@ function js_bundle($name, $options = array(), $plugin="") {
     $d = $base; 
     if(!is_readable($d)) return false;
     
+    $tag_build = new AssetTagHelper;
+    
     $dir = new \RecursiveIteratorIterator(new \RecursiveRegexIterator(new \RecursiveDirectoryIterator($d, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS), '#(?<!/)\.js$|^[^\.]*$#i'), true);
     foreach($dir as $file){
       $name = $file->getPathName();
-      if(is_file($name))$ret .= AssetTagHelper::javascript_include_tag("/".str_replace($base, "", $name), $options);
+      if(is_file($name))$ret .= $tag_build->javascript_include_tag("/".str_replace($base, "", $name), $options);
     }
-  } else $ret = AssetTagHelper::javascript_include_tag("/javascripts/build/{$name}_combined", $options);
+  } else $ret = $tag_build->javascript_include_tag("/javascripts/build/{$name}_combined", $options);
   return $ret;
 }
 
