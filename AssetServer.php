@@ -14,7 +14,8 @@ class AssetServer {
   
   static public function symlink_bundle($bundle, $type, $source_path, $target_link = false) {
     if(!$target_link) {
-      $target_base = PUBLIC_DIR.$type."/build/vendor/";
+      if($type == "images") $target_base = PUBLIC_DIR.$type;
+      else $target_base = PUBLIC_DIR.$type."/build/vendor/";
 			if(is_dir($target_base) === false ) mkdir($target_base, 0777, true);
       $target_link = $target_base.$bundle;
     }
