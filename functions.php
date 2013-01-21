@@ -9,7 +9,12 @@
  **/
 function css_bundle($name, $options=array(), $plugin="") {
   if(ENV=="development") {     
-    $base = PUBLIC_DIR;
+    if($plugin) {
+      $base = PLUGIN_DIR.$plugin."/resources/public/";
+      if(!is_dir($base) && is_link(PUBLIC_DIR."stylesheets/".$name)) {
+        $base = PUBLIC_DIR."stylesheets/".$name;
+      } 
+    } else $base = PUBLIC_DIR;
     $d = $base."stylesheets/".$name;       
     $dir = new \RecursiveIteratorIterator(new \RecursiveRegexIterator(new \RecursiveDirectoryIterator($d, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS), '#(?<!/)\.css$|^[^\.]*$#i'), true);
     foreach($dir as $file){
@@ -22,7 +27,14 @@ function css_bundle($name, $options=array(), $plugin="") {
 
 function js_bundle($name, $options = array(), $plugin="") {
   if(ENV=="development" || defined("NO_JS_BUNDLE")) {
-    $base = PUBLIC_DIR;
+    
+    if($plugin) {
+      $base = PLUGIN_DIR.$plugin."/resources/public/";
+      if(!is_dir($base) && is_link(PUBLIC_DIR."javascripts/".$name)) {
+        $base = PUBLIC_DIR."javascripts/".$name;
+      } 
+    } else $base = PUBLIC_DIR;    
+    else $base = PUBLIC_DIR;
     $d = $base."javascripts/".$name;
     $dir = new \RecursiveIteratorIterator(new \RecursiveRegexIterator(new \RecursiveDirectoryIterator($d, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS), '#(?<!/)\.js$|^[^\.]*$#i'), true);
     foreach($dir as $file){
