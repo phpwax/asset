@@ -13,6 +13,7 @@ use Assetic\Asset\FileAsset;
 class AssetServer {
   
   public $asset_manager = false;
+  public $handlers = array();
   
   
   public function __construct() {
@@ -23,6 +24,10 @@ class AssetServer {
     $glob = rtrim($asset_directory,"/")."/*";
     $finder = new RecursiveAssetFinder($glob);
     $this->asset_manager->set($bundle, $finder->get_collection());
+  }
+  
+  public function handles($bundle) {
+    return $this->asset_manager->has($bundle);
   }
   
   
