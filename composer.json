@@ -27,7 +27,7 @@
     },
     "target-dir": "Wax/Asset",
     "autoload": {
-      "files": ["functions.php"]
+      "files": ["Wax/Asset/functions.php"]
     }
     
 }
