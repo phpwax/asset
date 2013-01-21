@@ -25,7 +25,7 @@ function css_bundle($name, $options=array(), $plugin="") {
     if(!is_readable($d)) return false;
          
     
-    foreach($tag_build->iterate_dir($d, "js") as $file){
+    foreach($tag_build->iterate_dir($d, "css") as $file){
       $name = $file->getPathName();
       $ret .= $tag_build->stylesheet_link_tag("/".str_replace($base, "", $name), $options);
     }  
