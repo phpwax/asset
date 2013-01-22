@@ -39,10 +39,11 @@ class AssetServer {
     foreach($collection as $asset) {
       if($asset->relative == $asset_url) {
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        print_r($finfo->buffer($asset->dump()));
+        header("Content-Type: ".$finfo->buffer($asset->dump()));
+        echo $asset->dump();
+        exit;
       }
     }
-    exit;
   }
   
   
