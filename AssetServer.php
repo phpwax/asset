@@ -34,7 +34,7 @@ class AssetServer {
   public function serve($asset_paths = array()) {
     $type = array_shift($asset_paths);
     $bundle = array_shift($asset_paths);
-    $asset_url = implode("/",$asset_paths);
+    $asset_url = "/".implode("/",$asset_paths);
     $collection = $this->asset_manager->get($bundle."_".$type);
     foreach($collection as $asset) {
       if($asset->getTargetPath() == $asset_url) {
