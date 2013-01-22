@@ -38,9 +38,8 @@ class AssetServer {
     $collection = $this->asset_manager->get($bundle."_".$type);
     foreach($collection as $asset) {
       if($asset->getTargetPath() == $asset_url) {
-        print_r($asset->getSourcePath());
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        print_r($finfo->file($asset->getSourcePath()));
+        print_r($finfo->buffer($asset->dump()));
       }
     }
     exit;
