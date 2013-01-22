@@ -13,7 +13,7 @@ use Assetic\Asset\FileAsset;
 class AssetServer {
   
   public $asset_manager = false;
-  public $handlers = array();
+  public $built_in = array("images","javascripts","stylesheets");
   
   
   public function __construct() {
