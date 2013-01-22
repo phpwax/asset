@@ -50,14 +50,13 @@ class AssetServer {
   
   public function serve($url) {    
     foreach($this->listeners as $pattern=>$bundle) {
-      if(preg_match($pattern, $url)) {
+      if(preg_match("/".$pattern."/", $url)) {
         $matched_pattern = $pattern;
         $collection = $this->asset_manager->get($bundle);
       }
     }
     if(!$collection) return;
-    $asset_url = preg_replace($matched_pattern, $url);
-    die($asset_url);
+    $asset_url = preg_replace("/^".$matched_pattern."/", "", $url);
     foreach($collection as $asset) {
       if($asset->relative == $asset_url) {
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
@@ -67,6 +66,7 @@ class AssetServer {
       }
     }
   }
+
   
   private function bundle_formatter($listener) {
     return preg_replace("/[^A-Za-z0-9 ]/", '_', $listener);
