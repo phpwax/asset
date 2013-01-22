@@ -29,7 +29,7 @@ class RecursiveAssetFinder {
   }
 
   public function get_collection() {
-    return new AssetCollection($this->assets);
+    return new AssetCollection($this->assets, array(),$this->base);
   }
   
   public function add($file) {

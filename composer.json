@@ -26,7 +26,8 @@
     "target-dir": "Wax/Asset",
     
     "autoload": {
-      "psr-0": { "Wax\\Asset": "" }
+      "psr-0": { "Wax\\Asset": "" },
+      "files": ["Wax/Asset/functions.php"]
     }
     
 }
