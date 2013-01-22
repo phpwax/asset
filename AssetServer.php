@@ -43,7 +43,7 @@ class AssetServer {
    */
   public function handles($url) {
     foreach($this->listeners as $pattern=>$bundle) {
-      if(preg_match($pattern, $url)) return $this->asset_manager->has($bundle);
+      if(preg_match("/".$pattern."/", $url)) return $this->asset_manager->has($bundle);
     }
   }
   
