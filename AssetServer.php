@@ -32,11 +32,15 @@ class AssetServer {
   
   
   public function serve($asset_paths = array()) {
-    $type = $asset_paths[0];
-    $bundle = $asset_paths[1];
+    $type = array_shift($asset_paths);
+    $bundle = array_shift($asset_paths);
+    $asset_url = implode("/",$asset_paths);
     $collection = $this->asset_manager->get($bundle."_".$type);
     foreach($collection as $asset) {
-      print_r($asset);
+      if($asset->getTargetPath() == $asset_url) {
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        print_r($finfo->file($asset->getSourcePath()));
+      }
     }
     exit;
   }
