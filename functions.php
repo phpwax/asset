@@ -13,7 +13,7 @@ function css_bundle($name, $options=array(), $plugin="") {
     if($plugin) {
       $as = AutoLoader::get_asset_server();
       if($as->handles($name, "stylesheets")) {
-        $base = dirname(dirname($as->asset_manager->get($name."_stylesheets")->getSourceRoot()));
+        $base = dirname(dirname($as->asset_manager->get($name."_stylesheets")->getSourceRoot()))."/";
         $d = $as->asset_manager->get($name."_stylesheets")->getSourceRoot();
       } else {
         $base = PLUGIN_DIR.$plugin."/resources/public/";
@@ -43,7 +43,7 @@ function js_bundle($name, $options = array(), $plugin="") {
     if($plugin) {
       $as = AutoLoader::get_asset_server();
       if($as->handles($name, "javascripts")) {
-        $base = dirname(dirname($as->asset_manager->get($name."_javascripts")->getSourceRoot()));
+        $base = dirname(dirname($as->asset_manager->get($name."_javascripts")->getSourceRoot()))."/";
         $d = $as->asset_manager->get($name."_javascripts")->getSourceRoot();
       } else {
         $base = PLUGIN_DIR.$plugin."/resources/public/";
