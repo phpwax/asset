@@ -36,7 +36,7 @@ class RecursiveAssetFinder {
     $relative_path = str_replace($this->base, "", $file); 
     $as = new FileAsset($file);
     $as->setTargetPath($relative_path);
-    $this->assets[]=new FileAsset($as);
+    $this->assets[]=$as;
   }
   
   private function initialize() {
