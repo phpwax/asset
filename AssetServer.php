@@ -60,7 +60,7 @@ class AssetServer {
       }
     }
     if(!$collection) return;
-    $asset_url = preg_replace("#^".$matched_pattern."$#", "", $url);
+    $asset_url = preg_replace("#^".$matched_pattern."#", "", $url);
     foreach($collection as $asset) {
       if($asset->relative == $asset_url) {
         $finfo = new \finfo(FILEINFO_MIME_TYPE);

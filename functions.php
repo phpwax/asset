@@ -42,7 +42,7 @@ function js_bundle($name, $options = array(), $plugin="") {
   if(ENV=="development" || defined("NO_JS_BUNDLE")) {
     if($plugin) {
       $as = AutoLoader::get_asset_server();
-      if($as->handles("javascripts_".$name)) {
+      if($as->handles("javascripts/".$name)) {
         $base = dirname(dirname($as->asset_manager->get("javascripts_".$name)->getSourceRoot()))."/";
         $d = $as->asset_manager->get("javascripts_".$name)->getSourceRoot();
       } else {
