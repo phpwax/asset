@@ -12,9 +12,9 @@ function css_bundle($name, $options=array(), $plugin="") {
   if(ENV=="development") {     
     if($plugin) {
       $as = AutoLoader::get_asset_server();
-      if($as->handles($name, "stylesheets")) {
-        $base = dirname(dirname($as->asset_manager->get($name."_stylesheets")->getSourceRoot()))."/";
-        $d = $as->asset_manager->get($name."_stylesheets")->getSourceRoot();
+      if($as->handles("stylesheets/".$name)) {
+        $base = dirname(dirname($as->asset_manager->get("stylesheets_".$name)->getSourceRoot()))."/";
+        $d = $as->asset_manager->get("stylesheets_".$name)->getSourceRoot();
       } else {
         $base = PLUGIN_DIR.$plugin."/resources/public/";
         $d = $base."stylesheets/";
@@ -42,9 +42,9 @@ function js_bundle($name, $options = array(), $plugin="") {
   if(ENV=="development" || defined("NO_JS_BUNDLE")) {
     if($plugin) {
       $as = AutoLoader::get_asset_server();
-      if($as->handles($name, "javascripts")) {
-        $base = dirname(dirname($as->asset_manager->get($name."_javascripts")->getSourceRoot()))."/";
-        $d = $as->asset_manager->get($name."_javascripts")->getSourceRoot();
+      if($as->handles("javascripts_".$name)) {
+        $base = dirname(dirname($as->asset_manager->get("javascripts_".$name)->getSourceRoot()))."/";
+        $d = $as->asset_manager->get("javascripts_".$name)->getSourceRoot();
       } else {
         $base = PLUGIN_DIR.$plugin."/resources/public/";
         $d = $base."javascripts/";
