@@ -70,6 +70,49 @@ class AssetServer {
       }
     }
   }
+  
+  public function bundle_builder($name, $options = array(), $plugin="", $type) {
+    $tag_build = new AssetTagHelper;
+    if(ENV=="development") {     
+      if($plugin) {
+        $as = AutoLoader::get_asset_server();
+        if($as->handles($type."/".$name)) {
+          $asset_bundle = $type."_".$name;
+          if($as->asset_manager->has($asset_bundle)) {
+            $base = dirname(dirname($as->asset_manager->get($asset_bundle)->getSourceRoot()))."/";
+            $d = $as->asset_manager->get($asset_bundle)->getSourceRoot();
+          }
+        } else {
+          $base = PLUGIN_DIR.$plugin."/resources/public/";
+          $d = $base.$type."/";
+        } 
+      } else {
+        $base = PUBLIC_DIR;
+        $d = $base.$type"/".$name; 
+      }
+    
+      if(!is_readable($d)) return false;
+         
+      if($type == "stylesheets") {
+        $filter ="css";
+        $b_method = "stylesheet_link_tag";
+      }
+      if($type == "javascripts") {
+        $filter ="js";
+        $b_method = "javascript_include_tag";
+      }
+      
+      foreach($tag_build->iterate_dir($d, $filter) as $file){
+        $name = $file->getPathName();
+        
+        
+        $ret .= $tag_build->$b_method("/".str_replace($base, "", $name), $options);
+      }  
+    
+    
+    } else $ret = $tag_build->$b_method($type"/build/{$name}_combined", $options);
+    return $ret;
+  }
 
 
   

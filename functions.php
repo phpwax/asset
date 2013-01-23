@@ -1,5 +1,5 @@
 <?php
-
+use Wax\Asset\AssetServer;
 
 /**
  * CSS Bundle
@@ -8,66 +8,10 @@
  * @author Ross Riley
  **/
 function css_bundle($name, $options=array(), $plugin="") {
-  $tag_build = new AssetTagHelper;
-  if(ENV=="development") {     
-    if($plugin) {
-      $as = AutoLoader::get_asset_server();
-      if($as->handles("stylesheets/".$name)) {
-        $asset_bundle = "stylesheets_".$name;
-        if($as->asset_manager->has($asset_bundle)) {
-          $base = dirname(dirname($as->asset_manager->get($asset_bundle)->getSourceRoot()))."/";
-          $d = $as->asset_manager->get($asset_bundle)->getSourceRoot();
-        }
-      } else {
-        $base = PLUGIN_DIR.$plugin."/resources/public/";
-        $d = $base."stylesheets/";
-      } 
-    } else {
-      $base = PUBLIC_DIR;
-      $d = $base."stylesheets/".$name; 
-    }
-    
-    if(!is_readable($d)) return false;
-         
-    
-    foreach($tag_build->iterate_dir($d, "css") as $file){
-      $name = $file->getPathName();
-      $ret .= $tag_build->stylesheet_link_tag("/".str_replace($base, "", $name), $options);
-    }  
-    
-    
-  } else $ret = $tag_build->stylesheet_link_tag("build/{$name}_combined", $options);
-  return $ret;
+  echo AssetServer::bundle_builder($name, $options = array(), $plugin="","stylesheets");
 }
 
 function js_bundle($name, $options = array(), $plugin="") {
-  $tag_build = new AssetTagHelper;
-  if(ENV=="development" || defined("NO_JS_BUNDLE")) {
-    if($plugin) {
-      $as = AutoLoader::get_asset_server();
-      if($as->handles("javascripts/".$name)) {
-        $asset_bundle = "javascripts_".$name;
-        if($as->asset_manager->has($asset_bundle)) {
-          $base = dirname(dirname($as->asset_manager->get($asset_bundle)->getSourceRoot()))."/";
-          $d = $as->asset_manager->get($asset_bundle)->getSourceRoot();
-        }
-      } else {
-        $base = PLUGIN_DIR.$plugin."/resources/public/";
-        $d = $base."javascripts/";
-      } 
-    } else {
-      $base = PUBLIC_DIR;
-      $d = $base."javascripts/".$name; 
-    }
-    
-    if(!is_readable($d)) return false;
-    
-    foreach($tag_build->iterate_dir($d, "js") as $file){
-      $name = $file->getPathName();
-      $ret .= $tag_build->stylesheet_link_tag("/".str_replace($base, "", $name), $options);
-    }  
-
-  } else $ret = $tag_build->javascript_include_tag("/javascripts/build/{$name}_combined", $options);
-  return $ret;
+  echo AssetServer::bundle_builder($name, $options = array(), $plugin="","javascripts");
 }
 
