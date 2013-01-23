@@ -13,8 +13,11 @@ function css_bundle($name, $options=array(), $plugin="") {
     if($plugin) {
       $as = AutoLoader::get_asset_server();
       if($as->handles("stylesheets/".$name)) {
-        $base = dirname(dirname($as->asset_manager->get("stylesheets_".$name)->getSourceRoot()))."/";
-        $d = $as->asset_manager->get("stylesheets_".$name)->getSourceRoot();
+        $asset_bundle = "stylesheets_".$name;
+        if($as->asset_manager->has($asset_bundle)) {
+          $base = dirname(dirname($as->asset_manager->get($asset_bundle)->getSourceRoot()))."/";
+          $d = $as->asset_manager->get($asset_bundle)->getSourceRoot();
+        }
       } else {
         $base = PLUGIN_DIR.$plugin."/resources/public/";
         $d = $base."stylesheets/";
@@ -43,8 +46,11 @@ function js_bundle($name, $options = array(), $plugin="") {
     if($plugin) {
       $as = AutoLoader::get_asset_server();
       if($as->handles("javascripts/".$name)) {
-        $base = dirname(dirname($as->asset_manager->get("javascripts_".$name)->getSourceRoot()))."/";
-        $d = $as->asset_manager->get("javascripts_".$name)->getSourceRoot();
+        $asset_bundle = "javascripts_".$name;
+        if($as->asset_manager->has($asset_bundle)) {
+          $base = dirname(dirname($as->asset_manager->get($asset_bundle)->getSourceRoot()))."/";
+          $d = $as->asset_manager->get($asset_bundle)->getSourceRoot();
+        }
       } else {
         $base = PLUGIN_DIR.$plugin."/resources/public/";
         $d = $base."javascripts/";
