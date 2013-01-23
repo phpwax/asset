@@ -72,10 +72,10 @@ class AssetServer {
   }
   
   public function bundle_builder($name, $options = array(), $plugin="", $type) {
-    $tag_build = new AssetTagHelper;
+    $tag_build = new \AssetTagHelper;
     if(ENV=="development") {     
       if($plugin) {
-        $as = AutoLoader::get_asset_server();
+        $as = \AutoLoader::get_asset_server();
         if($as->handles($type."/".$name)) {
           $asset_bundle = $type."_".$name;
           if($as->asset_manager->has($asset_bundle)) {
