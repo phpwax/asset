@@ -56,10 +56,10 @@ class AssetServer {
     foreach($this->listeners as $pattern=>$bundle) {
       if(preg_match("#^".preg_quote($pattern)."#", $url)) {
         $matched_pattern = $pattern;
+        if(!$this->asset_manager->has($bundle)) return;
         $collection = $this->asset_manager->get($bundle);
       }
     }
-    if(!$collection) return;
     $asset_url = preg_replace("#^".$matched_pattern."#", "", $url);
     foreach($collection as $asset) {
       if($asset->relative == $asset_url) {
