@@ -88,7 +88,7 @@ class AssetServer {
         } 
       } else {
         $base = PUBLIC_DIR;
-        $d = $base.$type"/".$name; 
+        $d = $base.$type."/".$name; 
       }
     
       if(!is_readable($d)) return false;
@@ -110,7 +110,7 @@ class AssetServer {
       }  
     
     
-    } else $ret = $tag_build->$b_method($type"/build/{$name}_combined", $options);
+    } else $ret = $tag_build->$b_method($type."/build/{$name}_combined", $options);
     return $ret;
   }
 
