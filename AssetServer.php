@@ -45,7 +45,7 @@ class AssetServer {
    */
   public function handles($url) {
     foreach($this->listeners as $pattern=>$bundle) {
-      if(preg_match("#".$pattern."#", $url)) return $this->asset_manager->has($bundle);
+      if(preg_match("#".preg_quote($pattern)."#g", $url)) return $this->asset_manager->has($bundle);
     }
     return false;
   }
@@ -54,7 +54,7 @@ class AssetServer {
   
   public function serve($url) {   
     foreach($this->listeners as $pattern=>$bundle) {
-      if(preg_match("#".$pattern."#", $url)) {
+      if(preg_match("#".preg_quote($pattern)."#g", $url)) {
         $matched_pattern = $pattern;
         $collection = $this->asset_manager->get($bundle);
       }
