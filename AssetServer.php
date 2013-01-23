@@ -27,13 +27,15 @@ class AssetServer {
    * @param string $asset_directory 
    * @param string $pattern 
    */
-  public function register($listener, $asset_directory, $pattern="/*") {
-    $glob = rtrim($asset_directory,"/").$pattern;
-    $finder = new RecursiveAssetFinder($glob);
-    $bundle = $this->bundle_formatter($listener);
-    $this->listeners[$listener]=$bundle;
-    $this->asset_manager->set($bundle, $finder->get_collection());
-  }
+   public function register($listener, $asset_directory, $pattern) {
+     if(!$pattern) $pattern = "/*";
+     $glob = rtrim($asset_directory,"/").$pattern;
+     $finder = new RecursiveAssetFinder($glob);
+     $bundle = $this->bundle_formatter($listener);
+     $this->listeners[$listener]=$bundle;
+     $this->asset_manager->set($bundle, $finder->get_collection());
+   }
+
   
   /**
    * Returns whether server can handle url based on listener
@@ -66,6 +68,7 @@ class AssetServer {
       }
     }
   }
+
 
   
   private function bundle_formatter($listener) {
