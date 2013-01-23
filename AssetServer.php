@@ -47,6 +47,7 @@ class AssetServer {
     foreach($this->listeners as $pattern=>$bundle) {
       if(preg_match("#".$pattern."#", $url)) return $this->asset_manager->has($bundle);
     }
+    return false;
   }
 
   
