@@ -3,6 +3,7 @@ namespace Wax\Asset;
 use Assetic\AssetManager;
 use Assetic\Asset\AssetCollection;
 use Assetic\Asset\FileAsset;
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -118,27 +119,24 @@ class AssetServer {
     $asset_url = preg_replace("#^".$matched_pattern."#", "", $url);
     foreach($collection as $asset) {
       if($asset->relative == $asset_url) {
-        if(!$this->mime_list_serve($asset)) $this->finfo_serve($aset);
+        $response = new Response(
+            $asset->dump(),
+            200,
+            array('content-type' => $this->guess_mime($asset))
+        );
+        $response->send();
       }
     }
   }
   
-  private function mime_list_serve($asset) {
+  private function guess_mime($asset) {
     $path = pathinfo($asset->relative);
     $mapped_mime = $this->mime_types_map[$path["extension"]];
-    if($mapped_mime) {
-      header("Content-Type: ".$mapped_mime);
-      echo $asset->dump();
-      exit;
+    if($mapped_mime) return $mapped_mime;
+    else {
+      $finfo = new \finfo(FILEINFO_MIME_TYPE);
+      return $finfo->buffer($asset->dump())
     }
-    return false;
-  }
-  
-  private function finfo_serve($asset) {
-    $finfo = new \finfo(FILEINFO_MIME_TYPE);
-    header("Content-Type: ".$finfo->buffer($asset->dump()));
-    echo $asset->dump();
-    exit;
   }
   
   public function bundle_builder($name, $options = array(), $plugin="", $type) {
