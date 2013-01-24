@@ -125,6 +125,7 @@ class AssetServer {
             array('content-type' => $this->guess_mime($asset))
         );
         $response->send();
+        exit;
       }
     }
   }
