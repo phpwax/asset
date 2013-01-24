@@ -135,7 +135,7 @@ class AssetServer {
     if($mapped_mime) return $mapped_mime;
     else {
       $finfo = new \finfo(FILEINFO_MIME_TYPE);
-      return $finfo->buffer($asset->dump())
+      return $finfo->buffer($asset->dump());
     }
   }
   
