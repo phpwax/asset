@@ -2,7 +2,7 @@
     "name": "phpwax/asset",
     "type": "library",
     "description": "Wax Asset Bridge",
-    "keywords": [],
+    "keywords": ["asset"],
     "homepage": "http://php-wax.com",
     "license": "MIT",
     "authors": [
