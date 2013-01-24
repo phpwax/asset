@@ -3,7 +3,6 @@ namespace Wax\Asset;
 use Assetic\AssetManager;
 use Assetic\Asset\AssetCollection;
 use Assetic\Asset\FileAsset;
-use Symfony\Component\HttpFoundation\File\File;
 
 
 /**
