@@ -40,24 +40,34 @@ class RecursiveAssetFinder {
   }
   
   private function initialize() {
-    $this->add_directory($this->base);    
-    $directories = new \RecursiveIteratorIterator(
-        new \ParentIterator(new \RecursiveDirectoryIterator($this->base)), 
-         \RecursiveIteratorIterator::SELF_FIRST);
-    foreach($directories as $dir) {
-      $this->add_directory($dir);
+    $files = $this->rglob($this->pattern, 0, $this->base);
+    foreach($files as $path) {
+      if(is_file($path)) $this->add($path);
     }
   }
   
   private function add_directory($dir) {
-    if(false !== $paths = glob($dir."/".$this->pattern)) {
-      foreach($paths as $path) {
-        if(is_file($path)) {
-          $this->add($path);
-        }
-      }
-    }
+    
   }
+  
+  /**
+   * @param int $pattern
+   *  the pattern passed to glob()
+   * @param int $flags
+   *  the flags passed to glob()
+   * @param string $path
+   *  the path to scan
+   * @return mixed
+   *  an array of files in the given path matching the pattern.
+   */
+
+  private function rglob($pattern='*', $flags = 0, $path='') {
+    $paths=glob($path.'*', GLOB_MARK|GLOB_ONLYDIR|GLOB_NOSORT);
+    $files=glob($path.$pattern, $flags);
+    foreach ($paths as $path) { $files=array_merge($files,rglob($pattern, $flags, $path)); }
+    return $files;
+  }
+  
   
   
 }
