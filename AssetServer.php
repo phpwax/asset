@@ -86,10 +86,9 @@ class AssetServer {
    public function register($listener, $asset_directory, $pattern) {
      if(!$pattern) $pattern = "/*";
      $glob = rtrim($asset_directory,"/").$pattern;
-     $finder = new RecursiveAssetFinder($glob);
      $bundle = $this->bundle_formatter($listener);
      $this->listeners[$listener]=$bundle;
-     $this->asset_manager->set($bundle, $finder->get_collection());
+     $this->bundle_map[$bundle] = $glob;
    }
 
   
@@ -101,9 +100,17 @@ class AssetServer {
    */
   public function handles($url) {
     foreach($this->listeners as $pattern=>$bundle) {
-      if(preg_match("#^".preg_quote($pattern)."#", $url)) return $this->asset_manager->has($bundle);
+      if(preg_match("#^".preg_quote($pattern)."#", $url)) return true;
     }
     return false;
+  }
+  
+  
+  public function load($bundle) {
+    $locator = $this->bundle_map[$bundle];
+    $finder = new RecursiveAssetFinder($locator);
+    $this->asset_manager->set($bundle, $finder->get_collection());
+    return $this->asset_manager->get($bundle);
   }
 
   
@@ -112,8 +119,8 @@ class AssetServer {
     foreach($this->listeners as $pattern=>$bundle) {
       if(preg_match("#^".preg_quote($pattern)."#", $url)) {
         $matched_pattern = $pattern;
-        if(!$this->asset_manager->has($bundle)) return;
-        $collection = $this->asset_manager->get($bundle);
+        if(!isset($this->bundle_map[$bundle])) return;
+        $collection = $this->load($bundle);
       }
     }
     $asset_url = preg_replace("#^".$matched_pattern."#", "", $url);
