@@ -155,6 +155,7 @@ class AssetServer {
         if($as->handles($type."/".$name)) {
           $asset_bundle = $type."_".$name;
           if($as->asset_manager->has($asset_bundle)) {
+            $as->load();
             $base = dirname(dirname($as->asset_manager->get($asset_bundle)->getSourceRoot()))."/";
             $d = $as->asset_manager->get($asset_bundle)->getSourceRoot();
           }
