@@ -153,9 +153,9 @@ class AssetServer {
       if($plugin) {
         $as = \AutoLoader::get_asset_server();
         if($as->handles($type."/".$name)) {
+          $as->load();
           $asset_bundle = $type."_".$name;
           if($as->asset_manager->has($asset_bundle)) {
-            $as->load();
             $base = dirname(dirname($as->asset_manager->get($asset_bundle)->getSourceRoot()))."/";
             $d = $as->asset_manager->get($asset_bundle)->getSourceRoot();
           }
