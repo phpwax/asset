@@ -46,9 +46,6 @@ class RecursiveAssetFinder {
     }
   }
   
-  private function add_directory($dir) {
-    
-  }
   
   /**
    * @param int $pattern
