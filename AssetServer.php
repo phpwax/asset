@@ -158,7 +158,7 @@ class AssetServer {
   }
   
   private function guess_mime($asset_file) {
-    $path = pathinfo($asset_file);
+    $path = pathinfo($asset_file->relative);
     $mapped_mime = $this->mime_types_map[$path["extension"]];
     if($mapped_mime) return $mapped_mime;
     else {
