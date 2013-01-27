@@ -133,6 +133,8 @@ class AssetServer {
         200,
         array('content-type' => $this->guess_mime($matched_asset))
       );
+      $response->setPublic();
+      $response->setMaxAge(600);
       $response->send();
       exit;
     }
