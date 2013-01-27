@@ -148,7 +148,7 @@ class AssetServer {
       
       $asset_content = $matched_asset->dump();
       $response->setContent($asset_content);
-      $response->headers->set("Content-type",$this->guess_mime($asset_content));
+      $response->headers->set("Content-type",$this->guess_mime($matched_asset));
 
       $response->send();
       exit;
