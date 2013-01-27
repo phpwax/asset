@@ -120,25 +120,28 @@ class AssetServer {
       if(preg_match("#^".preg_quote($pattern)."#", $url)) {
         $matched_pattern = $pattern;
         if(!isset($this->bundle_map[$bundle])) return;
-        $collection = $this->load($bundle);
+        $locator = $this->bundle_map[$bundle];
+        $finder = new RecursiveAssetFinder($locator);
       }
     }
+        
     $asset_url = preg_replace("#^".$matched_pattern."#", "", $url);
-    foreach($collection as $asset) {
-      if($asset->relative == $asset_url) {
-        $response = new Response(
-            $asset->dump(),
-            200,
-            array('content-type' => $this->guess_mime($asset))
-        );
-        $response->send();
-        exit;
-      }
+    $matched_asset = $finder->get_single_asset($asset_url);
+    if($matched_asset) {
+      $response = new Response(
+        file_get_contents($matched_asset),
+        200,
+        array('content-type' => $this->guess_mime($matched_asset))
+      );
+      $response->send();
+      exit;
     }
+    
+    
   }
   
-  private function guess_mime($asset) {
-    $path = pathinfo($asset->relative);
+  private function guess_mime($asset_file) {
+    $path = pathinfo($asset_file);
     $mapped_mime = $this->mime_types_map[$path["extension"]];
     if($mapped_mime) return $mapped_mime;
     else {

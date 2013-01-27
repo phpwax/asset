@@ -25,11 +25,19 @@ class RecursiveAssetFinder {
     $this->pattern = basename($glob);
     $this->base = dirname($glob);
     $this->assets = array();
-    $this->initialize();
   }
 
   public function get_collection() {
+    $this->initialize();
     return new AssetCollection($this->assets, array(),$this->base);
+  }
+  
+  public function get_single_asset($asset_url) {
+    $files = $this->rglob($this->pattern, 0, $this->base);
+    foreach($files as $file) {
+      $relative = str_replace($this->base, "", $file);
+      if($relative == $asset_url) return $file;
+    }
   }
   
   public function add($file) {
