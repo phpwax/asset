@@ -4,6 +4,7 @@ use Assetic\AssetManager;
 use Assetic\Asset\AssetCollection;
 use Assetic\Asset\FileAsset;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 
 /**
@@ -129,14 +130,26 @@ class AssetServer {
     $asset_url = preg_replace("#^".$matched_pattern."#", "", $url);
     $matched_asset = $finder->get_single_asset($asset_url);
     if($matched_asset) {
-      var_dump($matched_asset); exit;
-      $response = new Response(
-        file_get_contents($matched_asset),
-        200,
-        array('content-type' => $this->guess_mime($matched_asset))
-      );
-      $response->setPublic();
-      $response->setMaxAge(600);
+      $response = new Response();
+      
+      $response->setExpires(new \DateTime());
+
+      // last-modified
+      if (null !== $lastModified = $matched_asset->getLastModified()) {
+        $date = new \DateTime();
+        $date->setTimestamp($lastModified);
+        $response->setLastModified($date);
+      }
+
+      if($response->isNotModified(Request::createFromGlobals())) {
+        $response->send();
+        exit;
+      }
+      
+      $asset_content = $matched_asset->dump();
+      $response->setContent($asset_content);
+      $response->headers->set("Content-type",$this->guess_mime($asset_content));
+
       $response->send();
       exit;
     }
