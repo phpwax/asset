@@ -15,6 +15,7 @@ class AssetServer {
   
   public $asset_manager = false;
   public $listeners     = array();
+  public $bundle_map    = array();
   
   public $mime_types_map = array(
         'txt' => 'text/plain',
