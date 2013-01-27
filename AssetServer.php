@@ -78,6 +78,7 @@ class AssetServer {
     $this->asset_manager = new AssetManager;
   }
   
+  
   /**
    * Registers an asset handler, the listener decides what url fragments to take responsibility for.
    *
@@ -130,31 +131,34 @@ class AssetServer {
     $asset_url = preg_replace("#^".$matched_pattern."#", "", $url);
     $matched_asset = $finder->get_single_asset($asset_url);
     if($matched_asset) {
-      $response = new Response();
-      
-      $response->setExpires(new \DateTime());
-
-      // last-modified
-      if (null !== $lastModified = $matched_asset->getLastModified()) {
-        $date = new \DateTime();
-        $date->setTimestamp($lastModified);
-        $response->setLastModified($date);
-      }
-
-      if($response->isNotModified(Request::createFromGlobals())) {
-        $response->send();
-        exit;
-      }
-      
-      $asset_content = $matched_asset->dump();
-      $response->setContent($asset_content);
-      $response->headers->set("Content-type",$this->guess_mime($matched_asset));
-
-      $response->send();
-      exit;
+      $this->asset_response($matched_asset);
     }
     
     
+  }
+  
+  private function asset_response($asset) {
+    $response = new Response();
+    $response->setExpires(new \DateTime());
+    
+    // last-modified
+    if (null !== $lastModified = $asset->getLastModified()) {
+      $date = new \DateTime();
+      $date->setTimestamp($lastModified);
+      $response->setLastModified($date);
+    }
+      
+
+    if($response->isNotModified(Request::createFromGlobals())) {
+      $response->send();
+      exit;
+    }
+      
+    $asset_content = $asset->dump();
+    $response->setContent($asset_content);
+    $response->headers->set("Content-type",$this->guess_mime($asset));
+    $response->send();
+    exit;
   }
   
   private function guess_mime($asset_file) {
@@ -171,13 +175,12 @@ class AssetServer {
     $tag_build = new \AssetTagHelper;
     if(ENV=="development") {     
       if($plugin) {
-        $as = \AutoLoader::get_asset_server();
-        if($as->handles($type."/".$name)) {
+        if($this->handles($type."/".$name)) {
           $asset_bundle = $this->bundle_formatter($type."/".$name);
-          $as->load($asset_bundle);
-          if($as->asset_manager->has($asset_bundle)) {
-            $base = dirname(dirname($as->asset_manager->get($asset_bundle)->getSourceRoot()))."/";
-            $d = $as->asset_manager->get($asset_bundle)->getSourceRoot();
+          $this->load($asset_bundle);
+          if($this->asset_manager->has($asset_bundle)) {
+            $base = dirname(dirname($this->asset_manager->get($asset_bundle)->getSourceRoot()))."/";
+            $d = $this->asset_manager->get($asset_bundle)->getSourceRoot();
           }
         } else {
           $base = PLUGIN_DIR.$plugin."/resources/public/";
