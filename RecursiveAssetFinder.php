@@ -36,7 +36,11 @@ class RecursiveAssetFinder {
     $files = $this->rglob($this->pattern, 0, $this->base);
     foreach($files as $file) {
       $relative = str_replace($this->base, "", $file);
-      if($relative == $asset_url) return $file;
+      if($relative == $asset_url) {
+        $as = new FileAsset($file);
+        $as->relative = $relative;
+        return $as;
+      }
     }
   }
   

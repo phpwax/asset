@@ -129,6 +129,7 @@ class AssetServer {
     $asset_url = preg_replace("#^".$matched_pattern."#", "", $url);
     $matched_asset = $finder->get_single_asset($asset_url);
     if($matched_asset) {
+      var_dump($matched_asset); exit;
       $response = new Response(
         file_get_contents($matched_asset),
         200,
