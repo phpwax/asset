@@ -103,7 +103,7 @@ class AssetServer {
    */
   public function handles($url) {
     foreach($this->listeners as $pattern=>$bundle) {
-      if(preg_match("#^".preg_quote($pattern)."/#", $url)) return true;
+      if(preg_match("#^".preg_quote($pattern)."#", $url)) return true;
     }
     return false;
   }
@@ -120,7 +120,7 @@ class AssetServer {
   
   public function serve($url) {   
     foreach($this->listeners as $pattern=>$bundle) {
-      if(preg_match("#^".preg_quote($pattern)."/#", $url)) {
+      if(preg_match("#^".preg_quote($pattern)."#", $url)) {
         $matched_pattern = $pattern;
         if(!isset($this->bundle_map[$bundle])) return;
         $locator = $this->bundle_map[$bundle];
