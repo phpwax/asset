@@ -13,11 +13,11 @@ use Symfony\Component\HttpFoundation\Request;
 * @author Ross Riley
 */
 class AssetServer {
-  
+
   public $asset_manager = false;
   public $listeners     = array();
   public $bundle_map    = array();
-  
+
   public $mime_types_map = array(
         'txt' => 'text/plain',
         'htm' => 'text/html',
@@ -72,19 +72,19 @@ class AssetServer {
         'odt' => 'application/vnd.oasis.opendocument.text',
         'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
   );
-  
-  
+
+
   public function __construct() {
     $this->asset_manager = new AssetManager;
   }
-  
-  
+
+
   /**
    * Registers an asset handler, the listener decides what url fragments to take responsibility for.
    *
-   * @param string $listener 
-   * @param string $asset_directory 
-   * @param string $pattern 
+   * @param string $listener
+   * @param string $asset_directory
+   * @param string $pattern
    */
    public function register($listener, $asset_directory, $pattern) {
      if(!$pattern) $pattern = "/*";
@@ -94,11 +94,11 @@ class AssetServer {
      $this->bundle_map[$bundle] = $glob;
    }
 
-  
+
   /**
    * Returns whether server can handle url based on listener
    *
-   * @param string $listener 
+   * @param string $listener
    * @return boolean
    */
   public function handles($url) {
@@ -107,8 +107,8 @@ class AssetServer {
     }
     return false;
   }
-  
-  
+
+
   public function load($bundle) {
     $locator = $this->bundle_map[$bundle];
     $finder = new RecursiveAssetFinder($locator);
@@ -116,9 +116,9 @@ class AssetServer {
     return $this->asset_manager->get($bundle);
   }
 
-  
-  
-  public function serve($url) {   
+
+
+  public function serve($url) {
     foreach($this->listeners as $pattern=>$bundle) {
       if(preg_match("#^".preg_quote($pattern)."#", $url)) {
         $matched_pattern = $pattern;
@@ -127,40 +127,40 @@ class AssetServer {
         $finder = new RecursiveAssetFinder($locator);
       }
     }
-        
+
     $asset_url = preg_replace("#^".$matched_pattern."#", "", $url);
     $matched_asset = $finder->get_single_asset($asset_url);
     if($matched_asset) {
       $this->asset_response($matched_asset);
     }
-    
-    
+
+
   }
-  
+
   private function asset_response($asset) {
     $response = new Response();
     $response->setExpires(new \DateTime());
-    
+
     // last-modified
     if (null !== $lastModified = $asset->getLastModified()) {
       $date = new \DateTime();
       $date->setTimestamp($lastModified);
       $response->setLastModified($date);
     }
-      
+
 
     if($response->isNotModified(Request::createFromGlobals())) {
       $response->send();
       exit;
     }
-      
+
     $asset_content = $asset->dump();
     $response->setContent($asset_content);
     $response->headers->set("Content-type",$this->guess_mime($asset));
     $response->send();
     exit;
   }
-  
+
   private function guess_mime($asset_file) {
     $path = pathinfo($asset_file->relative);
     $mapped_mime = $this->mime_types_map[$path["extension"]];
@@ -170,12 +170,12 @@ class AssetServer {
       return $finfo->buffer($asset_file->dump());
     }
   }
-  
+
   public function bundle_builder($name, $options = array(), $plugin="", $type) {
     $tag_build = new \AssetTagHelper;
-    if(ENV=="development") {     
+    if(ENV=="development") {
       if($plugin) {
-        if($this->handles($type."/".$name)) {
+        if($this->handles($type."/".$name."/")) {
           $asset_bundle = $this->bundle_formatter($type."/".$name);
           $this->load($asset_bundle);
           if($this->asset_manager->has($asset_bundle)) {
@@ -185,14 +185,14 @@ class AssetServer {
         } else {
           $base = PLUGIN_DIR.$plugin."/resources/public/";
           $d = $base.$type."/";
-        } 
+        }
       } else {
         $base = PUBLIC_DIR;
-        $d = $base.$type."/".$name; 
+        $d = $base.$type."/".$name;
       }
-    
+
       if(!is_readable($d)) return false;
-         
+
       if($type == "stylesheets") {
         $filter ="css";
         $b_method = "stylesheet_link_tag";
@@ -201,24 +201,24 @@ class AssetServer {
         $filter ="js";
         $b_method = "javascript_include_tag";
       }
-      
+
       foreach($tag_build->iterate_dir($d, $filter) as $file){
         $name = $file->getPathName();
-        
-        
+
+
         $ret .= $tag_build->$b_method("/".str_replace($base, "", $name), $options);
-      }  
-    
-    
+      }
+
+
     } else $ret = $tag_build->$b_method($type."/build/{$name}_combined", $options);
     return $ret;
   }
 
 
-  
+
   private function bundle_formatter($listener) {
     return preg_replace("/[^A-Za-z0-9 ]/", '_', $listener);
   }
-  
-  
+
+
 }
