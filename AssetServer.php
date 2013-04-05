@@ -210,7 +210,7 @@ class AssetServer {
       }
 
 
-    } else $ret = $tag_build->$b_method($type."/build/{$name}_combined", $options);
+    } else $ret = $tag_build->$b_method("/build/{$name}_combined", $options);
     return $ret;
   }
 
