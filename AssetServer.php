@@ -201,15 +201,10 @@ class AssetServer {
       }
 
       if(!is_readable($d)) return false;
-
       foreach($tag_build->iterate_dir($d, $filter) as $file){
         $name = $file->getPathName();
-
-
         $ret .= $tag_build->$b_method("/".str_replace($base, "", $name), $options);
       }
-
-
     } else $ret = $tag_build->$b_method("/".$type."/build/{$name}_combined", $options);
     return $ret;
   }
