@@ -173,16 +173,6 @@ class AssetServer {
 
   public function bundle_builder($name, $options = array(), $plugin="", $type) {
     $tag_build = new \AssetTagHelper;
-
-    if($type == "stylesheets") {
-      $filter ="css";
-      $b_method = "stylesheet_link_tag";
-    }
-    if($type == "javascripts") {
-      $filter ="js";
-      $b_method = "javascript_include_tag";
-    }
-
     if(ENV=="development") {
       if($plugin) {
         if($this->handles($type."/".$name."/")) {
@@ -203,6 +193,15 @@ class AssetServer {
 
       if(!is_readable($d)) return false;
 
+      if($type == "stylesheets") {
+        $filter ="css";
+        $b_method = "stylesheet_link_tag";
+      }
+      if($type == "javascripts") {
+        $filter ="js";
+        $b_method = "javascript_include_tag";
+      }
+
       foreach($tag_build->iterate_dir($d, $filter) as $file){
         $name = $file->getPathName();
 
@@ -211,7 +210,7 @@ class AssetServer {
       }
 
 
-    } else $ret = $tag_build->$b_method("/build/{$name}_combined", $options);
+    } else $ret = $tag_build->$b_method("/".$type."/build/{$name}_combined", $options);
     return $ret;
   }
 
