@@ -17,3 +17,4 @@ function js_bundle($name, $options = array(), $plugin="") {
   echo $as->bundle_builder($name, $options, $plugin,"javascripts");
 }
 
+AutoLoader::register_controller_path("plugin", __DIR__."/controllers/");
