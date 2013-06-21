@@ -205,7 +205,7 @@ class AssetServer {
         $name = $file->getPathName();
         $ret .= $tag_build->$b_method("/".str_replace($base, "", $name), $options);
       }
-    } else $ret = $tag_build->$b_method("/".$type."/build/{$name}", $options);
+    } else $ret = $tag_build->$b_method("/build/$type/$name", $options);
     return $ret;
   }
 
