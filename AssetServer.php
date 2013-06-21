@@ -73,6 +73,13 @@ class AssetServer {
         'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
   );
 
+  public $type_mapping = array(
+      "stylesheets" => array(
+        "filter" => "css",
+        "b_method" => "stylesheet_link_tag"),
+      "javascripts" => array(
+        "filter" => "js",
+        "b_method" => "javascript_include_tag"));
 
   public function __construct() {
     $this->asset_manager = new AssetManager;
@@ -173,43 +180,59 @@ class AssetServer {
 
   public function bundle_builder($name, $options = array(), $plugin="", $type) {
     $tag_build = new \AssetTagHelper;
-    if($type == "stylesheets") {
-      $filter ="css";
-      $b_method = "stylesheet_link_tag";
-    }
-    if($type == "javascripts") {
-      $filter ="js";
-      $b_method = "javascript_include_tag";
-    }
-    
+    $b_method = $this->type_mapping[$type]['b_method'];
     if(ENV=="development") {
       if($plugin) {
-        if($this->handles($type."/".$name."/")) {
-          $asset_bundle = $this->bundle_formatter($type."/".$name);
-          $this->load($asset_bundle);
-          if($this->asset_manager->has($asset_bundle)) {
-            $base = dirname(dirname($this->asset_manager->get($asset_bundle)->getSourceRoot()))."/";
-            $d = $this->asset_manager->get($asset_bundle)->getSourceRoot();
-          }
-        } else {
-          $base = PLUGIN_DIR.$plugin."/resources/public/";
-          $d = $base.$type."/";
-        }
-      } else {
-        $base = PUBLIC_DIR;
-        $d = $base.$type."/".$name;
+        $dir = $this->fetch_dir($name, $type);
+        if(!$dir) $dir = array(
+          "base" => PLUGIN_DIR.$plugin."/resources/public/",
+          "dir"  => PLUGIN_DIR.$type."/");
+      }else{
+        $dir = array(
+          "base" => PUBLIC_DIR,
+          "dir"  => PUBLIC_DIR.$type."/".$name);
       }
 
-      if(!is_readable($d)) return false;
-      foreach($tag_build->iterate_dir($d, $filter) as $file){
-        $name = $file->getPathName();
-        $ret .= $tag_build->$b_method("/".str_replace($base, "", $name), $options);
-      }
+      foreach($this->find_files($dir["dir"], $this->type_mapping[$type]['filter']) as $file)
+        $ret .= $tag_build->$b_method("/".str_replace($dir["base"], "", $file), $options);
     } else $ret = $tag_build->$b_method("/build/$type/$name", $options);
     return $ret;
   }
 
+  private function find_files($dir, $filter){
+    if(!is_readable($dir)) return;
+    $tag_build = new \AssetTagHelper;
+    foreach($tag_build->iterate_dir($dir, $filter) as $file) $ret[] = $file->getPathName();
+    return $ret;
+  }
 
+  private function fetch_dir($name, $type){
+    if(!$this->handles($type."/".$name."/")) return false;
+    $asset_bundle = $this->bundle_formatter($type."/".$name);
+    $this->load($asset_bundle);
+    if($this->asset_manager->has($asset_bundle))
+      return array(
+        "base" => dirname(dirname($this->asset_manager->get($asset_bundle)->getSourceRoot()))."/",
+        "dir"  => $this->asset_manager->get($asset_bundle)->getSourceRoot());
+  }
+
+  public function built_bundle($name, $type){
+    $dir = $this->fetch_dir($name, $type);
+    if(!$dir){
+      foreach(array(
+        array(
+          "base" => PUBLIC_DIR,
+          "dir"  => PUBLIC_DIR.$type."/".$name),
+        array(
+          "base" => PLUGIN_DIR,
+          "dir"  => PLUGIN_DIR.$plugin."/resources/public/".$type."/")
+      ) as $test)
+        if(is_dir($test["dir"])) $dir = $test;
+    }
+    foreach($this->find_files($dir["dir"], $this->type_mapping[$type]['filter']) as $file)
+      $ret .= file_get_contents($file)."\n";
+    return $ret;
+  }
 
   private function bundle_formatter($listener) {
     return preg_replace("/[^A-Za-z0-9 ]/", '_', $listener);
