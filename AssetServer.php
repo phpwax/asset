@@ -234,6 +234,10 @@ class AssetServer {
     return $ret;
   }
 
+  public function mime($type){
+    return $this->mime_types_map[$this->type_mapping[$type]['filter']];
+  }
+
   private function bundle_formatter($listener) {
     return preg_replace("/[^A-Za-z0-9 ]/", '_', $listener);
   }
