@@ -6,7 +6,7 @@ class BuildController extends WaxController{
     $as = AutoLoader::get_asset_server();
     $filename = array_pop($this->route_array);
     $filename = substr($filename, 0, strrpos($filename, "."));
-    $this->response->add_header("Content-Type", $as->mime($this->action));
-    $this->response->write($as->built_bundle($filename, $this->action));
+    $this->response->add_header("Content-Type", $as->mime($this->route_array[2]));
+    $this->response->write($as->built_bundle($filename, $this->route_array[2], $this->route_array[1]));
   }
 }

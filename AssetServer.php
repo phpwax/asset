@@ -195,7 +195,10 @@ class AssetServer {
 
       foreach($this->find_files($dir["dir"], $this->type_mapping[$type]['filter']) as $file)
         $ret .= $tag_build->$b_method("/".str_replace($dir["base"], "", $file), $options);
-    } else $ret = $tag_build->$b_method("/build/$type/$name", $options);
+    }else{
+      $git_rev = \AssetTagHelper::git_revision();
+      $ret = $tag_build->$b_method("/build/$git_rev/$type/$name", $options);
+    }
     return $ret;
   }
 
@@ -216,7 +219,7 @@ class AssetServer {
         "dir"  => $this->asset_manager->get($asset_bundle)->getSourceRoot());
   }
 
-  public function built_bundle($name, $type){
+  public function built_bundle($name, $type, $version_hash){
     $dir = $this->fetch_dir($name, $type);
     if(!$dir){
       foreach(array(
