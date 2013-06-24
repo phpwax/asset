@@ -232,9 +232,18 @@ class AssetServer {
       ) as $test)
         if(is_dir($test["dir"])) $dir = $test;
     }
-    foreach($this->find_files($dir["dir"], $this->type_mapping[$type]['filter']) as $file)
-      $ret .= file_get_contents($file)."\n";
-    return $ret;
+    $extension = $this->type_mapping[$type]['filter'];
+    foreach($this->find_files($dir["dir"], $extension) as $file)
+      $combined .= file_get_contents($file)."\n";
+
+    //cache into public dir for direct http serving if possible
+    if(is_writable(PUBLIC_DIR."build")){
+      $base = PUBLIC_DIR."build/$version_hash/$type";
+      mkdir($base, 0777, true);
+      file_put_contents("$base/$name.$extension", $combined);
+    }
+
+    return $combined;
   }
 
   public function mime($type){
