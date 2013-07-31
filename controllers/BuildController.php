@@ -4,9 +4,11 @@ class BuildController extends WaxController{
   public $use_view = false;
   public function method_missing(){
     $as = AutoLoader::get_asset_server();
-    $filename = array_pop($this->route_array);
-    $filename = substr($filename, 0, strrpos($filename, "."));
-    $this->response->add_header("Content-Type", $as->mime($this->route_array[2]));
-    $this->response->write($as->built_bundle($filename, $this->route_array[2], $this->route_array[1]));
+    if(!$this->filename) $this->filename = array_pop($this->route_array);
+    $this->filename = substr($this->filename, 0, strrpos($this->filename, "."));
+    if(!$this->type) $this->type = $this->route_array[2];
+    $this->response->add_header("Content-Type", $as->mime($this->type));
+    $this->hash = $this->route_array[1];
+    $this->response->write($as->built_bundle($this->filename, $this->type, $this->hash));
   }
 }
