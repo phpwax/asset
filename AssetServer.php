@@ -181,7 +181,7 @@ class AssetServer {
   public function bundle_builder($name, $options = array(), $plugin="", $type) {
     $tag_build = new \AssetTagHelper;
     $b_method = $this->type_mapping[$type]['b_method'];
-    if(ENV=="development") {
+    if(ENV=="development" && !defined("PRODUCTION_ASSETS")) {
       if($plugin) {
         $dir = $this->fetch_dir($name, $type);
         if(!$dir) $dir = array(
